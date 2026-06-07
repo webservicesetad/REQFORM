@@ -2,346 +2,95 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مدیریت حواله‌های انبار | ستاد کربلا</title>
+    <title>حواله انبار امام حسن (ع)</title>
     <style>
-        :root { 
-            --main-color: #1a252f; 
-            --accent-color: #2980b9; 
-            --ui-bg-color: #d1d8e0; 
-            --form-bg-color: #ffffff; 
-            --border-color: #333;
-        }
-
-        body { 
-            font-family: 'Tahoma', sans-serif; 
-            background-color: var(--ui-bg-color); 
-            margin: 0; 
-            display: flex; 
-            height: 100vh; 
-            color: #222; 
-        }
-
-        #loader-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95); 
-            display: flex;
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center;
-            z-index: 1000; 
-            transition: opacity 0.5s ease;
-        }
-
-        .spinner {
-            width: 50px; 
-            height: 50px; 
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--accent-color); 
-            border-radius: 50%;
-            animation: spin 1s linear infinite; 
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
-
-        #sidebar { 
-            width: 350px; 
-            background: #fff; 
-            border-left: 1px solid #bbb; 
-            display: flex; 
-            flex-direction: column; 
-            z-index: 10; 
-        }
-
-        .sidebar-header { 
-            background: var(--main-color); 
-            color: #fff; 
-            padding: 20px; 
-            text-align: center; 
-            font-weight: bold; 
-        }
-
-        #ui-counter { 
-            padding: 12px; 
-            text-align: center; 
-            background: #eee; 
-            font-size: 14px; 
-            border-bottom: 1px solid #ccc; 
-            font-weight: bold; 
-        }
-
-        .search-container { 
-            padding: 20px; 
-            background: #f9f9f9; 
-            border-bottom: 1px solid #eee; 
-        }
-
-        select, input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 8px; 
-            border: 1px solid #777; 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            font-size: 14px; 
-        }
-
-        #request-list { 
-            overflow-y: auto; 
-            flex-grow: 1; 
-        }
-
-        .req-item { 
-            padding: 20px; 
-            border-bottom: 1px solid #e0e0e0; 
-            cursor: pointer; 
-            transition: 0.3s; 
-        }
-
-        .req-item:hover { 
-            background: #e8f4fd; 
-            border-right: 4px solid var(--accent-color); 
-        }
-
-        #document-view { 
-            flex-grow: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            display: flex; 
-            justify-content: center; 
-        }
-
-        #form-container { 
-            width: 100%; 
-            max-width: 850px; 
-            padding: 50px; 
-            opacity: 0; 
-            transition: opacity 0.6s ease; 
-        }
-
-        #form-container.active { 
-            opacity: 1; 
-        }
-
-        .print-btn { 
-            background: #27ae60; 
-            color: white; 
-            border: none; 
-            padding: 12px 25px; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            margin-bottom: 25px; 
-            font-weight: bold; 
-        }
-
-        .f-container { 
-            width: 800px; 
-            margin: auto; 
-            border: 1px solid #000; 
-            background: #fff; 
-            display: flex; 
-            flex-direction: column; 
-            height: auto; 
-        }
-
-        .table-area { flex-grow: 1; } 
-
-        .top-label { text-align: center; font-size: 12px; border-bottom: 1px solid #000; padding: 5px; }
-        .header-grid { display: grid; grid-template-columns: 100px 1fr 150px; border-bottom: 1px solid #000; }
-        .cell { border-left: 1px solid #000; padding: 5px; display: flex; align-items: center; justify-content: center; }
-        .meta-column { display: flex; flex-direction: column; border-right: 1px solid #000; }
-        .meta-cell { border-bottom: 1px solid #000; padding: 5px; text-align: center; }
-        .meta-cell:last-child { border-bottom: none; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th { background-color: #000; color: #fff; border: 1px solid #000; padding: 8px; }
-        td { border: 1px solid #000; padding: 8px; text-align: center; }
-
-        .footer-box { 
-            border-top: 1px solid #000; 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 0; 
-        }
-
-        .signature-space { 
-            height: 120px; 
-            width: 33.33%; 
-            padding: 10px; 
-            border: none; 
-            box-sizing: border-box;
-        }
-
-        @media print {
-            @page { margin: 1cm; }
-            body { background: #fff; }
-            #sidebar, .print-btn { display: none !important; }
-            #form-container { width: 100%; padding: 0; }
-            .f-container { border: 1px solid #000 !important; width: 100% !important; }
-        }
+        :root { --main-color: #1a252f; --accent-color: #2980b9; --ui-bg-color: #d1d8e0; }
+        body { font-family: 'Tahoma', sans-serif; background-color: var(--ui-bg-color); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        
+        /* Window Style */
+        .f-container { width: 850px; border: 1px solid #000; background: #fff; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        h3 { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-top: 0; }
+        
+        .grid-header { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 15px; }
+        .item-row { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr 0.5fr; gap: 10px; margin-bottom: 10px; }
+        
+        input { padding: 10px; border: 1px solid #777; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .btn-add { background: #27ae60; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .btn-submit { background: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-submit:disabled { background: #7f8c8d; cursor: not-allowed; }
     </style>
 </head>
 <body>
-    <div id="loader-overlay">
 
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSfrevQ39VinoyUdjOTMVGtfLhKZd38WTaCdOkD9rUjQgJ08iA/viewform?usp=header" target="_blank" class="add-item-btn">
-  Add Item
-</a>
+    <div class="f-container">
+        <h3>ثبت حواله انبار امام حسن (ع)</h3>
         
-        <div class="spinner"></div>
-        <p>در حال دریافت اطلاعات...</p>
-    </div>
-
-    <div id="sidebar">
-        <div class="sidebar-header">جستجوی حواله‌ها</div>
-        <div id="ui-counter">در حال بارگذاری...</div>
-        <div class="search-container">
-            <select id="search-type">
-                <option value="all">جستجوی عمومی</option>
-                <option value="id">شماره حواله</option>
-                <option value="receiver">تحویل گیرنده</option>
-                <option value="item">نام کالا</option>
-                <option value="date">تاریخ</option>
-                <option value="place">محل مصرف</option>
-                <option value="desc">توضیحات</option>
-            </select>
-            <input type="text" id="search-input" placeholder="عبارت مورد نظر..." onkeyup="filterList()">
+        <div class="grid-header">
+            <input id="receiver" placeholder="تحویل گیرنده">
+            <input id="number" placeholder="شماره حواله">
+            <input id="date" placeholder="تاریخ">
+            <input id="location" placeholder="محل مصرف کالا">
         </div>
-        <div id="request-list"></div>
-    </div>
 
-    <div id="document-view">
-        <div id="form-container">
-            <button class="print-btn" onclick="window.print()">چاپ حواله</button>
-            <div id="content-area">
-                <p style="text-align:center; color: #555; margin-top: 50px;">لطفاً یک حواله را از لیست انتخاب کنید.</p>
+        <div id="items-list">
+            <div class="item-row">
+                <input name="name" placeholder="نام کالا">
+                <input name="unit" placeholder="واحد">
+                <input name="qty" type="number" placeholder="تعداد">
+                <input name="desc" placeholder="توضیحات">
+                <button onclick="this.parentElement.remove()" style="background:#e74c3c; border:none; color:white; cursor:pointer;">X</button>
             </div>
         </div>
+        
+        <button class="btn-add" onclick="addRow()">+ افزودن ردیف جدید</button>
+        <button class="btn-submit" onclick="submitAll()">ثبت نهایی همه اقلام</button>
     </div>
 
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbxgqG6xXKrQS6oElXgBabgZhuNr_AeKmgtlYFTYd-3ornIaoFqXLLLPltO3LqG8i6F6hA/exec";
-        let allData = new Map();
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfrevQ39VinoyUdjOTMVGtfLhKZd38WTaCdOkD9rUjQgJ08iA/formResponse";
 
-        async function loadData() {
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                for (let i = 1; i < data.length; i++) {
-                    let id = data[i][7];
-                    if (!id) continue;
-                    if (!allData.has(id)) {
-                        allData.set(id, []);
-                    }
-                    allData.get(id).push(data[i]);
-                }
-                renderList(allData);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                document.getElementById('loader-overlay').style.display = 'none';
-            }
+        function addRow() {
+            const div = document.createElement('div');
+            div.className = 'item-row';
+            div.innerHTML = `<input name="name" placeholder="نام کالا">
+                             <input name="unit" placeholder="واحد">
+                             <input name="qty" type="number" placeholder="تعداد">
+                             <input name="desc" placeholder="توضیحات">
+                             <button onclick="this.parentElement.remove()" style="background:#e74c3c; border:none; color:white; cursor:pointer;">X</button>`;
+            document.getElementById('items-list').appendChild(div);
         }
 
-        function renderList(dataMap) {
-            const list = document.getElementById('request-list');
-            document.getElementById('ui-counter').innerText = "تعداد حواله‌ها: " + dataMap.size;
-            list.innerHTML = "";
-            dataMap.forEach(function(rows, id) {
-                let div = document.createElement('div');
-                div.className = 'req-item';
-                div.innerHTML = "<strong>حواله " + id + "</strong><br><small>تحویل گیرنده: " + (rows[0][8] || '---') + "</small>";
-                div.onclick = function() {
-                    showDocument(id, rows);
-                };
-                list.appendChild(div);
-            });
-        }
-
-        function filterList() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const type = document.getElementById('search-type').value;
-            const filteredMap = new Map();
-            allData.forEach(function(rows, id) {
-                let firstRow = rows[0];
-                let match = false;
-                if (type === 'all') {
-                    match = (id + firstRow[8] + firstRow[6] + firstRow[4] + firstRow[5]).toLowerCase().includes(query);
-                } else if (type === 'id') {
-                    match = String(id).toLowerCase().includes(query);
-                } else if (type === 'receiver') {
-                    match = String(firstRow[8] || "").toLowerCase().includes(query);
-                } else if (type === 'date') {
-                    match = String(firstRow[6] || "").toLowerCase().includes(query);
-                } else if (type === 'place') {
-                    match = String(firstRow[4] || "").toLowerCase().includes(query);
-                } else if (type === 'desc') {
-                    match = String(firstRow[5] || "").toLowerCase().includes(query);
-                } else if (type === 'item') {
-                    match = rows.some(function(r) {
-                        return String(r[1] || "").toLowerCase().includes(query);
-                    });
-                }
-                if (match) filteredMap.set(id, rows);
-            });
-            renderList(filteredMap);
-        }
-
-        function showDocument(id, rows) {
-            const container = document.getElementById('form-container');
-            container.classList.remove('active');
-            let firstRow = rows[0];
-            let tableRowsHtml = "";
+        async function submitAll() {
+            const btn = document.querySelector('.btn-submit');
+            const rows = document.querySelectorAll('.item-row');
             
-            for (let i = 0; i < rows.length; i++) {
-                tableRowsHtml += "<tr>";
-                tableRowsHtml += "<td>" + (i + 1) + "</td>";
-                tableRowsHtml += "<td>" + rows[i][1] + "</td>";
-                tableRowsHtml += "<td>" + rows[i][2] + "</td>";
-                tableRowsHtml += "<td>" + rows[i][3] + "</td>";
-                tableRowsHtml += "<td>" + firstRow[4] + "</td>";
-                tableRowsHtml += "<td>" + firstRow[5] + "</td>";
-                tableRowsHtml += "</tr>";
-            }
+            btn.disabled = true;
+            btn.innerText = "⏳ در حال ارسال...";
 
-            setTimeout(function() {
-                document.getElementById('content-area').innerHTML = 
-                "<div class='f-container'>" +
-                    "<div class='table-area'>" +
-                        "<div class='top-label'>ستاد کربلا</div>" +
-                        "<div class='header-grid'>" +
-                            "<div class='cell'><img src='assets/logo.png' alt='Logo' style='width: 70px; height: auto;'></div>" +
-                            "<div class='cell' style='font-weight: bold; font-size: 18px;'>حواله انبار کالا</div>" +
-                            "<div class='meta-column'>" +
-                                "<div class='meta-cell'>تاریخ: " + String(firstRow[6] || "").split('T')[0] + "</div>" +
-                                "<div class='meta-cell'>شماره: " + id + "</div>" +
-                            "</div>" +
-                        "</div>" +
-                        "<table>" +
-                            "<thead>" +
-                                "<tr><th>ردیف</th><th>نام کالا</th><th>واحد</th><th>تعداد</th><th>محل مصرف کالا</th><th>توضیحات</th></tr>" +
-                            "</thead>" +
-                            "<tbody>" + tableRowsHtml + "</tbody>" +
-                        "</table>" +
-                    "</div>" +
-                    "<div class='footer-box'>" +
-                        "<div class='signature-space'>تحویل دهنده:<br></div>" +
-                        "<div class='signature-space'>تحویل گیرنده: " + (firstRow[8] || "فارس فیصل") + "<br></div>" +
-                        "<div class='signature-space'>مدیریت ستاد کربلا:<br></div>" +
-                    "</div>" +
-                "</div>";
-                container.classList.add('active');
-            }, 100);
+            try {
+                for (let row of rows) {
+                    const formData = new URLSearchParams();
+                    // Global Mappings
+                    formData.append("entry.1172558795", document.getElementById('receiver').value);
+                    formData.append("entry.300355511", document.getElementById('number').value);
+                    formData.append("entry.1612489700", document.getElementById('date').value);
+                    formData.append("entry.428605394", document.getElementById('location').value);
+                    
+                    // Row Mappings
+                    formData.append("entry.1345563131", row.querySelector('[name="name"]').value);
+                    formData.append("entry.45025518", row.querySelector('[name="unit"]').value);
+                    formData.append("entry.109539102", row.querySelector('[name="qty"]').value);
+                    formData.append("entry.416316317", row.querySelector('[name="desc"]').value);
+
+                    await fetch(formURL, { method: "POST", mode: "no-cors", body: formData });
+                }
+                btn.innerText = "✅ با موفقیت ثبت شد";
+                btn.style.background = "#27ae60";
+            } catch (e) {
+                btn.innerText = "❌ خطا در ارسال";
+                btn.disabled = false;
+            }
         }
-        
-        window.onload = loadData;
     </script>
 </body>
 </html>
