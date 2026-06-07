@@ -110,11 +110,11 @@
             border-right: 4px solid var(--accent-color); 
         }
 
-        #document-view { 
+        #document-view, #add-item-section, #add-item-section-2 { 
             flex-grow: 1; 
             padding: 40px; 
             overflow-y: auto; 
-            display: flex; 
+            display: none; 
             justify-content: center; 
         }
 
@@ -190,31 +190,16 @@
 </head>
 <body>
     <div id="loader-overlay">
-
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSfrevQ39VinoyUdjOTMVGtfLhKZd38WTaCdOkD9rUjQgJ08iA/viewform?usp=header" target="_blank" class="add-item-btn">
-  Add Item
-</a>
-        
         <div class="spinner"></div>
         <p>در حال دریافت اطلاعات...</p>
     </div>
 
     <div id="sidebar">
-
-
-
-
         <div class="sidebar-header">منو</div>
-<button onclick="showAddItem()">ثبت حواله جدید</button>
-<hr>
-
-
-
-
-
-
-
-        
+        <button onclick="showSection('document-view')">مشاهده حواله‌ها</button>
+        <button onclick="showSection('add-item-section')">ثبت حواله جدید</button>
+        <button onclick="showSection('add-item-section-2')">ثبت مورد دوم</button>
+        <hr>
         <div class="sidebar-header">جستجوی حواله‌ها</div>
         <div id="ui-counter">در حال بارگذاری...</div>
         <div class="search-container">
@@ -232,27 +217,15 @@
         <div id="request-list"></div>
     </div>
 
-
-
-
-
-
-
-    <div id="add-item-section" style="display:none;">
+    <div id="add-item-section">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfrevQ39VinoyUdjOTMVGtfLhKZd38WTaCdOkD9rUjQgJ08iA/viewform?usp=header" style="width: 100%; height: 95vh; border: none;"></iframe>
     </div>
 
+    <div id="add-item-section-2">
+        <iframe src="URL_SECOND_FORM_HERE" style="width: 100%; height: 95vh; border: none;"></iframe>
+    </div>
 
-
-
-
-
-
-
-
-
-    
-
-    <div id="document-view">
+    <div id="document-view" style="display: flex;">
         <div id="form-container">
             <button class="print-btn" onclick="window.print()">چاپ حواله</button>
             <div id="content-area">
@@ -262,36 +235,15 @@
     </div>
 
     <script>
-
-
-
-
-
-
-
-
-        function showAddItem() {
-    document.getElementById('content-area').style.display = 'none';
-    document.getElementById('add-item-section').style.display = 'block';
-}
-
-function showDashboard() {
-    document.getElementById('content-area').style.display = 'block';
-    document.getElementById('add-item-section').style.display = 'none';
-}
-
-
-
-
-
-
-
-
-
-
-        
         const url = "https://script.google.com/macros/s/AKfycbxgqG6xXKrQS6oElXgBabgZhuNr_AeKmgtlYFTYd-3ornIaoFqXLLLPltO3LqG8i6F6hA/exec";
         let allData = new Map();
+
+        function showSection(id) {
+            document.getElementById('document-view').style.display = 'none';
+            document.getElementById('add-item-section').style.display = 'none';
+            document.getElementById('add-item-section-2').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
+        }
 
         async function loadData() {
             try {
@@ -322,6 +274,7 @@ function showDashboard() {
                 div.className = 'req-item';
                 div.innerHTML = "<strong>حواله " + id + "</strong><br><small>تحویل گیرنده: " + (rows[0][8] || '---') + "</small>";
                 div.onclick = function() {
+                    showSection('document-view');
                     showDocument(id, rows);
                 };
                 list.appendChild(div);
@@ -363,17 +316,16 @@ function showDashboard() {
             let firstRow = rows[0];
             let tableRowsHtml = "";
             
-for (let i = 0; i < rows.length; i++) {
-    tableRowsHtml += "<tr>";
-    tableRowsHtml += "<td>" + (i + 1) + "</td>";
-    tableRowsHtml += "<td>" + rows[i][1] + "</td>";
-    tableRowsHtml += "<td>" + rows[i][2] + "</td>";
-    tableRowsHtml += "<td>" + rows[i][3] + "</td>";
-    tableRowsHtml += "<td>" + firstRow[4] + "</td>";
-    // Using rows[i][5] ensures the description matches the specific row/item
-    tableRowsHtml += "<td>" + (rows[i][5] || "") + "</td>"; 
-    tableRowsHtml += "</tr>";
-}
+            for (let i = 0; i < rows.length; i++) {
+                tableRowsHtml += "<tr>";
+                tableRowsHtml += "<td>" + (i + 1) + "</td>";
+                tableRowsHtml += "<td>" + rows[i][1] + "</td>";
+                tableRowsHtml += "<td>" + rows[i][2] + "</td>";
+                tableRowsHtml += "<td>" + rows[i][3] + "</td>";
+                tableRowsHtml += "<td>" + firstRow[4] + "</td>";
+                tableRowsHtml += "<td>" + (rows[i][5] || "") + "</td>"; 
+                tableRowsHtml += "</tr>";
+            }
 
             setTimeout(function() {
                 document.getElementById('content-area').innerHTML = 
