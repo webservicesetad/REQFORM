@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست کامل حواله‌ها</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #2980b9;
+            --bg: #f8f9fa;
+        }
+
+        body { font-family: 'Tahoma', sans-serif; padding: 20px; background-color: var(--bg); margin: 0; }
+        
+        #loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .container { max-width: 1200px; margin: auto; }
+        .header-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .controls { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+        
+        #search-input { width: 100%; padding: 12px; border: 2px solid #e1e1e1; border-radius: 8px; }
+        #item-counter { background: var(--secondary); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
+        
+        /* Print Button Style */
+        .print-btn { background: #27ae60; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-family: Tahoma; }
+
+        .table-header { display: grid; grid-template-columns: 50px 80px 100px 2fr 1fr 1fr 1.5fr 1.5fr; padding: 15px; background: var(--primary); color: white; border-radius: 8px; font-weight: bold; font-size: 12px; }
+        .item-row { display: grid; grid-template-columns: 50px 80px 100px 2fr 1fr 1fr 1.5fr 1.5fr; padding: 15px; background: white; border-bottom: 1px solid #f0f0f0; align-items: center; font-size: 12px; }
+        .item-row:hover { background: #f1f7fc; }
+
+        /* Print Settings */
+        @media print {
+            body { background: white; padding: 0; }
+            .header-section, .print-btn { display: none !important; }
+            .table-header { background: #000 !important; }
+            .container { max-width: 100% !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-overlay">
+        <div class="spinner"></div>
+        <p>در حال دریافت اطلاعات...</p>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="controls">
+                <input type="text" id="search-input" placeholder="جستجو..." onkeyup="filterData()">
+                <button class="print-btn" onclick="window.print()">🖨️ چاپ لیست</button>
+                <div id="item-counter">تعداد: ۰</div>
+            </div>
+        </div>
+
+        <div class="table-header">
+            <div>ردیف</div>
+            <div>شماره</div>
+            <div>تاریخ</div>
+            <div>نام کالا</div>
+            <div>واحد</div>
+            <div>تعداد</div>
+            <div>محل مصرف</div>
+            <div>توضیحات</div>
+        </div>
+        <div id="items"></div>
+    </div>
+
+    <script>
+        const url = "https://script.google.com/macros/s/AKfycbxgqG6xXKrQS6oElXgBabgZhuNr_AeKmgtlYFTYd-3ornIaoFqXLLLPltO3LqG8i6F6hA/exec";
+        let rawData = [];
+
+        async function fetchData() {
+            try {
+                const response = await fetch(url);
+                rawData = await response.json();
+                rawData.shift(); 
+                render(rawData);
+            } catch (err) {
+                document.getElementById('items').innerHTML = "<p style='text-align:center;'>خطا در بارگذاری</p>";
+            } finally {
+                document.getElementById('loader-overlay').style.opacity = '0';
+                setTimeout(() => { document.getElementById('loader-overlay').style.display = 'none'; }, 500);
+            }
+        }
+
+        function render(data) {
+            const container = document.getElementById('items');
+            container.innerHTML = "";
+            document.getElementById('item-counter').innerText = "تعداد: " + data.length;
+            data.forEach((row, index) => {
+                let div = document.createElement('div');
+                div.className = 'item-row';
+                div.innerHTML = `
+                    <div>${index + 1}</div>
+                    <div>${row[7] || '-'}</div>
+                    <div>${row[6] ? row[6].split('T')[0] : '-'}</div>
+                    <div style="font-weight:bold;">${row[1] || '-'}</div>
+                    <div>${row[2] || '-'}</div>
+                    <div>${row[3] || '-'}</div>
+                    <div>${row[4] || '-'}</div>
+                    <div style="color:#666;">${row[5] || '-'}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function filterData() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const filtered = rawData.filter(r => 
+                String(r[7]).toLowerCase().includes(q) || 
+                String(r[6]).toLowerCase().includes(q) || 
+                String(r[1]).toLowerCase().includes(q) || 
+                String(r[4]).toLowerCase().includes(q) || 
+                String(r[5]).toLowerCase().includes(q)
+            );
+            render(filtered);
+        }
+
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
