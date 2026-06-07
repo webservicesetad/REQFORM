@@ -2,14 +2,15 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>حواله انبار امام حسن (ع)</title>
-    <style>
+    <title>مدیریت حواله‌های انبار | ستاد کربلا</title>
+<style>
         :root { 
             --main-color: #1a252f; 
             --accent-color: #2980b9; 
             --ui-bg-color: #d1d8e0; 
             --form-bg-color: #ffffff; 
             --border-color: #333;
+            --sidebar-width: 350px;
         }
 
         body { 
@@ -51,8 +52,35 @@
             100% { transform: rotate(360deg); } 
         }
 
+        /* Updated Iframe Panel: Now fills remaining width */
+        #iframe-panel {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Hidden off-screen to the right */
+            width: calc(100% - var(--sidebar-width));
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+            z-index: 9999; 
+            transition: right 0.4s ease;
+        }
+        #iframe-panel.open { right: var(--sidebar-width); }
+        #iframe-panel iframe { width: 100%; height: 100%; border: none; }
+        
+        .close-iframe-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px; /* Adjusted for RTL */
+            background: #c0392b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
         #sidebar { 
-            width: 350px; 
+            width: var(--sidebar-width); 
             background: #fff; 
             border-left: 1px solid #bbb; 
             display: flex; 
@@ -63,9 +91,39 @@
         .sidebar-header { 
             background: var(--main-color); 
             color: #fff; 
-            padding: 20px; 
+            padding: 15px 20px; 
             text-align: center; 
-            font-weight: bold; 
+            font-weight: bold;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .add-btn {
+            background: #27ae60; 
+            border: none; 
+            color: white; 
+            padding: 5px 12px; 
+            cursor: pointer; 
+            border-radius: 3px; 
+            font-size: 11px;
+            font-family: 'Tahoma', sans-serif;
+        }
+
+        .sheet-btn {
+            background: #e67e22; 
+            border: none; 
+            color: white; 
+            padding: 5px 12px; 
+            cursor: pointer; 
+            border-radius: 3px; 
+            font-size: 11px;
+            font-family: 'Tahoma', sans-serif;
         }
 
         #ui-counter { 
@@ -110,11 +168,11 @@
             border-right: 4px solid var(--accent-color); 
         }
 
-        #document-view, #add-item-section, #add-item-section-2 { 
+        #document-view { 
             flex-grow: 1; 
             padding: 40px; 
             overflow-y: auto; 
-            display: none; 
+            display: flex; 
             justify-content: center; 
         }
 
@@ -182,7 +240,7 @@
         @media print {
             @page { margin: 1cm; }
             body { background: #fff; }
-            #sidebar, .print-btn { display: none !important; }
+            #sidebar, .print-btn, #iframe-panel { display: none !important; }
             #form-container { width: 100%; padding: 0; }
             .f-container { border: 1px solid #000 !important; width: 100% !important; }
         }
@@ -194,13 +252,19 @@
         <p>در حال دریافت اطلاعات...</p>
     </div>
 
+    <div id="iframe-panel">
+        <button class="close-iframe-btn" onclick="closeIframe()">بستن ×</button>
+        <iframe id="main-iframe" src=""></iframe>
+    </div>
+
     <div id="sidebar">
-        <div class="sidebar-header">منو</div>
-        <button onclick="showSection('document-view')">مشاهده حواله‌ها</button>
-        <button onclick="showSection('add-item-section')">ثبت با additem.html</button>
-        <button onclick="showSection('add-item-section-2')">ثبت مورد دوم</button>
-        <hr>
-        <div class="sidebar-header">جستجوی حواله‌ها</div>
+        <div class="sidebar-header">
+            <span>مدیریت</span>
+            <div class="header-buttons">
+                <button class="sheet-btn" onclick="openIframe('linear.html')">شیت</button>
+                <button class="add-btn" onclick="openIframe('additem.html')">+ افزودن</button>
+            </div>
+        </div>
         <div id="ui-counter">در حال بارگذاری...</div>
         <div class="search-container">
             <select id="search-type">
@@ -217,15 +281,7 @@
         <div id="request-list"></div>
     </div>
 
-    <div id="add-item-section">
-        <iframe src="additem.html" style="width: 100%; height: 95vh; border: none;"></iframe>
-    </div>
-
-    <div id="add-item-section-2">
-        <iframe src="YOUR_SECOND_PAGE_URL" style="width: 100%; height: 95vh; border: none;"></iframe>
-    </div>
-
-    <div id="document-view" style="display: flex;">
+    <div id="document-view">
         <div id="form-container">
             <button class="print-btn" onclick="window.print()">چاپ حواله</button>
             <div id="content-area">
@@ -238,11 +294,14 @@
         const url = "https://script.google.com/macros/s/AKfycbxgqG6xXKrQS6oElXgBabgZhuNr_AeKmgtlYFTYd-3ornIaoFqXLLLPltO3LqG8i6F6hA/exec";
         let allData = new Map();
 
-        function showSection(id) {
-            document.getElementById('document-view').style.display = 'none';
-            document.getElementById('add-item-section').style.display = 'none';
-            document.getElementById('add-item-section-2').style.display = 'none';
-            document.getElementById(id).style.display = 'flex';
+        function openIframe(pageUrl) {
+            document.getElementById('main-iframe').src = pageUrl;
+            document.getElementById('iframe-panel').classList.add('open');
+        }
+
+        function closeIframe() {
+            document.getElementById('iframe-panel').classList.remove('open');
+            document.getElementById('main-iframe').src = "";
         }
 
         async function loadData() {
@@ -274,7 +333,6 @@
                 div.className = 'req-item';
                 div.innerHTML = "<strong>حواله " + id + "</strong><br><small>تحویل گیرنده: " + (rows[0][8] || '---') + "</small>";
                 div.onclick = function() {
-                    showSection('document-view');
                     showDocument(id, rows);
                 };
                 list.appendChild(div);
@@ -323,7 +381,7 @@
                 tableRowsHtml += "<td>" + rows[i][2] + "</td>";
                 tableRowsHtml += "<td>" + rows[i][3] + "</td>";
                 tableRowsHtml += "<td>" + firstRow[4] + "</td>";
-                tableRowsHtml += "<td>" + (rows[i][5] || "") + "</td>"; 
+                tableRowsHtml += "<td>" + firstRow[5] + "</td>";
                 tableRowsHtml += "</tr>";
             }
 
@@ -333,7 +391,7 @@
                     "<div class='table-area'>" +
                         "<div class='top-label'>ستاد کربلا</div>" +
                         "<div class='header-grid'>" +
-                            "<div class='cell'><img src='https://lh3.googleusercontent.com/d/1CmPwsuAqCQs4nqGY-ywk3zztchaomLbE' alt='Logo' style='width: 70px; height: auto;'></div>" +
+                            "<div class='cell'><img src='assets/logo.png' alt='Logo' style='width: 70px; height: auto;'></div>" +
                             "<div class='cell' style='font-weight: bold; font-size: 18px;'>حواله انبار کالا</div>" +
                             "<div class='meta-column'>" +
                                 "<div class='meta-cell'>تاریخ: " + String(firstRow[6] || "").split('T')[0] + "</div>" +
