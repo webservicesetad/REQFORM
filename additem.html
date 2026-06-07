@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>حواله انبار امام حسن (ع)</title>
+    <style>
+        :root { --main-color: #1a252f; --accent-color: #2980b9; --ui-bg-color: #d1d8e0; }
+        body { font-family: 'Tahoma', sans-serif; background-color: var(--ui-bg-color); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        
+        /* Window Style */
+        .f-container { width: 850px; border: 1px solid #000; background: #fff; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        h3 { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-top: 0; }
+        
+        .grid-header { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #ddd; padding-bottom: 15px; }
+        .item-row { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr 0.5fr; gap: 10px; margin-bottom: 10px; }
+        
+        input { padding: 10px; border: 1px solid #777; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .btn-add { background: #27ae60; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .btn-submit { background: var(--accent-color); color: white; border: none; padding: 15px; width: 100%; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-submit:disabled { background: #7f8c8d; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <div class="f-container">
+        <h3>ثبت حواله انبار امام حسن (ع)</h3>
+        
+        <div class="grid-header">
+            <input id="receiver" placeholder="تحویل گیرنده">
+            <input id="number" placeholder="شماره حواله">
+            <input id="date" placeholder="تاریخ">
+            <input id="location" placeholder="محل مصرف کالا">
+        </div>
+
+        <div id="items-list">
+            <div class="item-row">
+                <input name="name" placeholder="نام کالا">
+                <input name="unit" placeholder="واحد">
+                <input name="qty" type="number" placeholder="تعداد">
+                <input name="desc" placeholder="توضیحات">
+                <button onclick="this.parentElement.remove()" style="background:#e74c3c; border:none; color:white; cursor:pointer;">X</button>
+            </div>
+        </div>
+        
+        <button class="btn-add" onclick="addRow()">+ افزودن ردیف جدید</button>
+        <button class="btn-submit" onclick="submitAll()">ثبت نهایی همه اقلام</button>
+    </div>
+
+    <script>
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfrevQ39VinoyUdjOTMVGtfLhKZd38WTaCdOkD9rUjQgJ08iA/formResponse";
+
+        function addRow() {
+            const div = document.createElement('div');
+            div.className = 'item-row';
+            div.innerHTML = `<input name="name" placeholder="نام کالا">
+                             <input name="unit" placeholder="واحد">
+                             <input name="qty" type="number" placeholder="تعداد">
+                             <input name="desc" placeholder="توضیحات">
+                             <button onclick="this.parentElement.remove()" style="background:#e74c3c; border:none; color:white; cursor:pointer;">X</button>`;
+            document.getElementById('items-list').appendChild(div);
+        }
+
+        async function submitAll() {
+            const btn = document.querySelector('.btn-submit');
+            const rows = document.querySelectorAll('.item-row');
+            
+            btn.disabled = true;
+            btn.innerText = "⏳ در حال ارسال...";
+
+            try {
+                for (let row of rows) {
+                    const formData = new URLSearchParams();
+                    // Global Mappings
+                    formData.append("entry.1172558795", document.getElementById('receiver').value);
+                    formData.append("entry.300355511", document.getElementById('number').value);
+                    formData.append("entry.1612489700", document.getElementById('date').value);
+                    formData.append("entry.428605394", document.getElementById('location').value);
+                    
+                    // Row Mappings
+                    formData.append("entry.1345563131", row.querySelector('[name="name"]').value);
+                    formData.append("entry.45025518", row.querySelector('[name="unit"]').value);
+                    formData.append("entry.109539102", row.querySelector('[name="qty"]').value);
+                    formData.append("entry.416316317", row.querySelector('[name="desc"]').value);
+
+                    await fetch(formURL, { method: "POST", mode: "no-cors", body: formData });
+                }
+                btn.innerText = "✅ با موفقیت ثبت شد";
+                btn.style.background = "#27ae60";
+            } catch (e) {
+                btn.innerText = "❌ خطا در ارسال";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
