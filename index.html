@@ -354,35 +354,53 @@
                 list.appendChild(div);
             });
         }
+// 1. Add this utility function to your script
+function normalizeDigits(str) {
+    if (!str) return "";
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    
+    let normalized = String(str);
+    for (let i = 0; i < 10; i++) {
+        normalized = normalized.replace(new RegExp(persianDigits[i], 'g'), englishDigits[i]);
+    }
+    return normalized.toLowerCase();
+}
 
-        function filterList() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const type = document.getElementById('search-type').value;
-            const filteredMap = new Map();
-            allData.forEach(function(rows, id) {
-                let firstRow = rows[0];
-                let match = false;
-                if (type === 'all') {
-                    match = (id + firstRow[8] + firstRow[6] + firstRow[4] + firstRow[5]).toLowerCase().includes(query);
-                } else if (type === 'id') {
-                    match = String(id).toLowerCase().includes(query);
-                } else if (type === 'receiver') {
-                    match = String(firstRow[8] || "").toLowerCase().includes(query);
-                } else if (type === 'date') {
-                    match = String(firstRow[6] || "").toLowerCase().includes(query);
-                } else if (type === 'place') {
-                    match = String(firstRow[4] || "").toLowerCase().includes(query);
-                } else if (type === 'desc') {
-                    match = String(firstRow[5] || "").toLowerCase().includes(query);
-                } else if (type === 'item') {
-                    match = rows.some(function(r) {
-                        return String(r[1] || "").toLowerCase().includes(query);
-                    });
-                }
-                if (match) filteredMap.set(id, rows);
-            });
-            renderList(filteredMap);
+// 2. Your updated filterList function
+function filterList() {
+    // Normalize the search query once at the start
+    const query = normalizeDigits(document.getElementById('search-input').value);
+    const type = document.getElementById('search-type').value;
+    const filteredMap = new Map();
+
+    allData.forEach(function(rows, id) {
+        let firstRow = rows[0];
+        let match = false;
+        
+        // Helper to normalize and check data
+        const check = (val) => normalizeDigits(val).includes(query);
+
+        if (type === 'all') {
+            match = check(id + firstRow[8] + firstRow[6] + firstRow[4] + firstRow[5]);
+        } else if (type === 'id') {
+            match = check(id);
+        } else if (type === 'receiver') {
+            match = check(firstRow[8]);
+        } else if (type === 'date') {
+            match = check(firstRow[6]);
+        } else if (type === 'place') {
+            match = check(firstRow[4]);
+        } else if (type === 'desc') {
+            match = check(firstRow[5]);
+        } else if (type === 'item') {
+            match = rows.some(r => check(r[1]));
         }
+
+        if (match) filteredMap.set(id, rows);
+    });
+    renderList(filteredMap);
+}
 
         function showDocument(id, rows) {
             const container = document.getElementById('form-container');
