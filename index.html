@@ -408,16 +408,17 @@ function filterList() {
             let firstRow = rows[0];
             let tableRowsHtml = "";
             
-            for (let i = 0; i < rows.length; i++) {
-                tableRowsHtml += "<tr>";
-                tableRowsHtml += "<td>" + (i + 1) + "</td>";
-                tableRowsHtml += "<td>" + rows[i][1] + "</td>";
-                tableRowsHtml += "<td>" + rows[i][2] + "</td>";
-                tableRowsHtml += "<td>" + rows[i][3] + "</td>";
-                tableRowsHtml += "<td>" + firstRow[4] + "</td>";
-                tableRowsHtml += "<td>" + firstRow[5] + "</td>";
-                tableRowsHtml += "</tr>";
-            }
+for (let i = 0; i < rows.length; i++) {
+        // Change: Use rows[i][4] and rows[i][5] instead of firstRow
+        tableRowsHtml += "<tr>";
+        tableRowsHtml += "<td>" + (i + 1) + "</td>";
+        tableRowsHtml += "<td>" + rows[i][1] + "</td>";
+        tableRowsHtml += "<td>" + rows[i][2] + "</td>";
+        tableRowsHtml += "<td>" + rows[i][3] + "</td>";
+        tableRowsHtml += "<td>" + rows[i][4] + "</td>"; // Unique per row
+        tableRowsHtml += "<td>" + rows[i][5] + "</td>"; // Unique per row
+        tableRowsHtml += "</tr>";
+    }
 
             setTimeout(function() {
                 document.getElementById('content-area').innerHTML = 
