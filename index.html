@@ -468,11 +468,31 @@ for (let i = 0; i < rows.length; i++) {
 
 
 
-        function openScanPanel() {
+        
+
+
+
+
+
+
+function openScanPanel() {
+            // Replace 'currentRequestId' with whatever variable name your code uses to store the active request's ID
+            const activeId = typeof currentRequestId !== 'undefined' ? currentRequestId : ''; 
+            
             const iframePanel = document.getElementById('iframe-panel');
             const iframe = document.getElementById('main-iframe');
-            iframe.src = 'requestscan.html';
+            
+            // Pass the ID as a URL query parameter to requestscan.html
+            iframe.src = `requestscan.html?id=${activeId}`;
             iframePanel.classList.add('open');
+    
+
+
+
+
+
+
+        
         }
 
 
