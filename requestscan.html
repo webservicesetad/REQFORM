@@ -28,6 +28,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background: #fff;
             padding: 10px;
+            text-align: center;
         }
         img {
             max-width: 100%;
@@ -36,12 +37,39 @@
             height: auto;
             border-radius: 4px;
         }
+        .error-msg {
+            color: #c0392b;
+            padding: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h3>تصویر برگه اسکن شده حواله</h3>
+
+    <h3 id="scan-title">تصویر برگه اسکن شده حواله</h3>
     <div class="scan-container">
-        <img id="scan-image" src="" alt="برگه اسکن شده">
+        <img id="scan-image" src="" alt="برگه اسکن شده" onerror="showError()">
+        <p id="error-text" class="error-msg" style="display: none;">تصویر اسکن مربوط به این حواله یافت نشد.</p>
     </div>
+
+    <script>
+        // Extract the request ID passed from the main page URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const reqId = urlParams.get('id');
+
+        if (reqId) {
+            document.getElementById('scan-title').innerText = `اسکن حواله شماره: ${reqId}`;
+            // Points to RQST/scan/{id}.png (Change extension if your files are .jpg etc.)
+            document.getElementById('scan-image').src = `RQST/scan/${reqId}.png`;
+        } else {
+            showError();
+        }
+
+        function showError() {
+            document.getElementById('scan-image').style.display = 'none';
+            document.getElementById('error-text').style.display = 'block';
+        }
+    </script>
+
 </body>
 </html>
